@@ -6,13 +6,10 @@ import MessageList from './MessageList.jsx';
 class App extends Component {
   render() {
     return (
-      <body>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
+      <div>
         <MessageList />
         <Chatbar /> 
-      </body>
+      </div>
     );
   }
 }
