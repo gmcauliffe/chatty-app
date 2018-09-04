@@ -5,6 +5,7 @@ class MessageList extends Component {
   render() {
     const messages = this.props.messages.map(message => {
       return <Message 
+        key={ message.id }
         type={ message.type }
         content={ message.content }
         username={ message.username } />
