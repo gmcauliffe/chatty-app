@@ -11,7 +11,7 @@ class App extends Component {
     this.state = {
       currentUser: {name: 'Franklin'},
       messages: data
-    }
+    };
   }
 
 
