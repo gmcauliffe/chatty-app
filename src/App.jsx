@@ -4,8 +4,8 @@ import MessageList from './MessageList.jsx';
 import data from '../data.json';
 
 function generateRandomString() {
-  let text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (var i = 0; i < 6; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -30,18 +30,17 @@ class App extends Component {
     const randomId = generateRandomString();
     const newMessage = {
       id: randomId,
-      type: "incomingMessage",
+      type: 'incomingMessage',
       content: newPost.content,
       username: newPost.username
     }
-    console.log("newMessage= ", newMessage);
     this.setState({ messages: [...this.state.messages, newMessage]})
   }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
+    console.log('componentDidMount <App />');
     setTimeout(() => {
-      console.log("Simulating incoming message");
+      console.log('Simulating incoming message');
       const newMessage = {id: '8abc', type: 'incomingMessage', content: 'Hello there!', username: 'Michelle'};
       const messages = this.state.messages.concat(newMessage)
       this.setState({messages: messages})
