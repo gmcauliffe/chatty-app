@@ -6,13 +6,13 @@ class Message extends Component {
   render() {
     if (this.props.type === 'incomingMessage') {
       return (
-        <div className='message' key={ this.props.key }>
+        <div className='message'>
           <span className='message-username'>{ this.props.username }</span>
           <span className='message-content'>{ this.props.content }</span>
         </div>);
     } else {
       return (
-      <div className='message system' key={ this.props.key }>
+      <div className='message system'>
         { this.props.content }
       </div>);
     }
