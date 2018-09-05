@@ -32,19 +32,29 @@ class App extends Component {
       id: randomId,
       type: 'incomingMessage',
       content: newPost.content,
-      username: newPost.username
+      username: newPost.username,
+      time: Date.now()
     }
     this.setState({ messages: [...this.state.messages, newMessage]})
   }
 
   componentDidMount() {
-    console.log('componentDidMount <App />');
-    setTimeout(() => {
-      console.log('Simulating incoming message');
-      const newMessage = {id: '8abc', type: 'incomingMessage', content: 'Hello there!', username: 'Michelle'};
-      const messages = this.state.messages.concat(newMessage)
-      this.setState({messages: messages})
-    }, 3000);
+     // Connect to our WebSocket server.
+    // Storing the socket into a property on the App component to be used in
+    // other functions
+    this.socket = new WebSocket('ws://localhost:3001/');
+
+    // Small helper to make sending JSON objects easier.
+    this.socket.sendJson = obj => this.socket.send(JSON.stringify(obj));
+
+    // OnOpen event handler, tells us the socket is open.
+    this.socket.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    // OnMessage event handler, using a function on the class to handle this so
+    // our code stays consise
+    this.socket.onmessage = this._handleSocketMessage;
   }
 
   render() {
@@ -55,5 +65,25 @@ class App extends Component {
       </div>
     );
   }
+
+    /**
+   * Socket Message Event Handler
+   * @param {MessageEvent} message The MessageEvent object, this contains the data we've received from the server.
+   */
+  _handleSocketMessage = message => {
+    // Message data is serialized as JSON, parse it.
+    const json = JSON.parse(message.data);
+    console.log('Got message', json);
+
+    // Store the received message in our message list.
+    this.setState(prevState => ({
+      ...prevState,
+      messages: prevState.messages.concat(json)
+    }));
+  };
 }
+
+
+
+
 export default App;
