@@ -10,7 +10,6 @@ class MessageList extends Component {
         content={ message.content }
         username={ message.username } />
     })
-
     
     return (
       <main className="messages">
