@@ -3,6 +3,16 @@ import Chatbar from './Chatbar.jsx';
 import MessageList from './MessageList.jsx';
 import data from '../data.json';
 
+function generateRandomString() {
+  let text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < 6; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
+
 class App extends Component {
 
   constructor(props) {
@@ -13,11 +23,19 @@ class App extends Component {
       messages: data
     };
 
-    // this.onNewPost = this.onNewPost.bind(this);
+    this.onNewPost = this.onNewPost.bind(this);
   }
 
-  onNewPost(content) {
-    console.log(content);
+  onNewPost(newPost) {
+    const randomId = generateRandomString();
+    const newMessage = {
+      id: randomId,
+      type: "incomingMessage",
+      content: newPost.content,
+      username: newPost.username
+    }
+    console.log("newMessage= ", newMessage);
+    this.setState({ messages: [...this.state.messages, newMessage]})
   }
 
   componentDidMount() {
