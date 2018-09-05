@@ -33,7 +33,7 @@ class App extends Component {
       type: 'incomingMessage',
       content: newPost.content,
       username: newPost.username,
-      time: Date.now()
+      timestamp: Date.now()
     }
     this.setState({ messages: [...this.state.messages, newMessage]})
   }
