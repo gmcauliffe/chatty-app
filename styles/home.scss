@@ -8,7 +8,7 @@ body {
 }
 
 .chatbar {
-  background: tomato;
+  background: cornflowerblue;
   border-top: 1px solid black;
   bottom: 0;
   display: flex;
@@ -41,7 +41,9 @@ body {
   padding: 5px;
 }
 
-.message.system {
+.message-system {
+  display: flex;
+  padding: 5px;
   font-style: italic;
   padding: 5px 20px;
 }
@@ -63,7 +65,7 @@ body {
 }
 
 .navbar {
-  background: tomato;
+  background: cornflowerblue;
   border-bottom: 1px solid black;
   height: 60px;
   left: 0;
@@ -91,7 +93,7 @@ div.status {
   margin-top: 10px;
 
   span.error {
-    color: white;
+    color: red;
   }
 
   span.counter {
@@ -100,6 +102,6 @@ div.status {
   }
 
   span.over {
-    color: white;
+    color: red;
   }
 }
