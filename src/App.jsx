@@ -20,28 +20,20 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: 'Franklin'},
-      messages: data
+      messages: []
     };
 
-    this.onNewPost = this.onNewPost.bind(this);
+    this._handleSocketMessage = this._handleSocketMessage.bind(this);
+    this._onNewPost = this._onNewPost.bind(this);
   }
 
-  onNewPost(newPost) {
-    const randomId = generateRandomString();
-    const newMessage = {
-      id: randomId,
-      type: 'incomingMessage',
-      content: newPost.content,
-      username: newPost.username,
-      timestamp: Date.now()
-    }
-    this.setState({ messages: [...this.state.messages, newMessage]})
-  }
+  
 
   componentDidMount() {
      // Connect to our WebSocket server.
     // Storing the socket into a property on the App component to be used in
     // other functions
+    
     this.socket = new WebSocket('ws://localhost:3001/');
 
     // Small helper to make sending JSON objects easier.
@@ -54,14 +46,14 @@ class App extends Component {
 
     // OnMessage event handler, using a function on the class to handle this so
     // our code stays consise
-    this.socket.onmessage = this._handleSocketMessage;
+   this.socket.onmessage = this._handleSocketMessage;
   }
 
   render() {
     return (
       <div>
         <MessageList messages={ this.state.messages }/>
-        <Chatbar currentUser={ this.state.currentUser.name } onNewPost={ this.onNewPost }/> 
+        <Chatbar currentUser={ this.state.currentUser.name } onNewPost={ this._onNewPost }/> 
       </div>
     );
   }
@@ -81,6 +73,18 @@ class App extends Component {
       messages: prevState.messages.concat(json)
     }));
   };
+
+  _onNewPost(newPost) {
+    this.setState({currentUser: {name: newPost.username}})
+    
+    const newMessage = {
+      type: 'incomingMessage',
+      content: newPost.content,
+      username: newPost.username ? newPost.username : 'Anonymous'
+    }
+    // Send the msg object as a JSON-formatted string.
+    this.socket.sendJson(newMessage);
+  }
 }
 
 
