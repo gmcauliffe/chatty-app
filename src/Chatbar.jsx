@@ -49,7 +49,7 @@ class Chatbar extends Component {
           className="chatbar-username" 
           value={ this.state.username } 
           onChange={ this.onUsername } 
-          placeholder={ this.props.currentUser } />
+          placeholder='Anonymous' />
         <input
           id="chatbar-message"
           className="chatbar-message" 
