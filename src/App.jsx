@@ -3,15 +3,14 @@ import Chatbar from './Chatbar.jsx';
 import MessageList from './MessageList.jsx';
 import data from '../data.json';
 
-function generateRandomString() {
-  let text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (var i = 0; i < 6; i++) {
+function generateAnonymous() {
+  let text = 'Anonymous';
+  var possible = '0123456789';
+  for (var i = 0; i < 2; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return text;
 }
-
 
 class App extends Component {
 
@@ -19,20 +18,22 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentUser: {name: 'Franklin'},
+      currentUser: {name: 'Anonymous'},
       messages: []
     };
 
     this._handleSocketMessage = this._handleSocketMessage.bind(this);
     this._onNewPost = this._onNewPost.bind(this);
+    this._onNewUsername = this._onNewUsername.bind(this);
   }
-
-  
 
   componentDidMount() {
      // Connect to our WebSocket server.
     // Storing the socket into a property on the App component to be used in
     // other functions
+    let anon = generateAnonymous();
+
+    this.setState({currentUser: {name: anon}})
     
     this.socket = new WebSocket('ws://localhost:3001/');
 
@@ -53,7 +54,10 @@ class App extends Component {
     return (
       <div>
         <MessageList messages={ this.state.messages }/>
-        <Chatbar currentUser={ this.state.currentUser.name } onNewPost={ this._onNewPost }/> 
+        <Chatbar 
+          currentUser={ this.state.currentUser.name } 
+          onNewPost={ this._onNewPost }
+          onNewUsername={ this._onNewUsername }/> 
       </div>
     );
   }
@@ -62,7 +66,7 @@ class App extends Component {
    * Socket Message Event Handler
    * @param {MessageEvent} message The MessageEvent object, this contains the data we've received from the server.
    */
-  _handleSocketMessage = message => {
+  _handleSocketMessage(message) {
     // Message data is serialized as JSON, parse it.
     const json = JSON.parse(message.data);
     console.log('Got message', json);
@@ -74,14 +78,25 @@ class App extends Component {
     }));
   };
 
-  _onNewPost(newPost) {
-    this.setState({currentUser: {name: newPost.username}})
-    
-    const newMessage = {
-      type: 'incomingMessage',
-      content: newPost.content,
-      username: newPost.username ? newPost.username : 'Anonymous'
+  _onNewUsername(newUsername) {
+    const currentUser = this.state.currentUser;
+    console.log("currentUser= ", currentUser);
+    const newNotification = {
+      type: 'postNotification',
+      content: `${currentUser.name} changed their name to ${newUsername.username}`
     }
+    this.setState({currentUser: {name: newUsername.username}})
+    // Send the msg object as a JSON-formatted string.
+    this.socket.sendJson(newNotification);
+  }
+
+  _onNewPost(newPost) {
+    const newMessage = {
+      type: 'postMessage',
+      content: newPost.content,
+      username: this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous'
+    }
+
     // Send the msg object as a JSON-formatted string.
     this.socket.sendJson(newMessage);
   }

@@ -19,7 +19,8 @@ class Chatbar extends Component {
 
     this.onContent = this.onContent.bind(this);
     this.onUsername = this.onUsername.bind(this);
-    this.onKeyPressHandler = this.onKeyPressHandler.bind(this);
+    this.onKeyPressContent = this.onKeyPressContent.bind(this);
+    this.onKeyPressName = this.onKeyPressName.bind(this);
   }
 
   onUsername(event) {
@@ -34,9 +35,15 @@ class Chatbar extends Component {
     });
   }
   
-  onKeyPressHandler(event) {
+  onKeyPressContent(event) {
     if (event.key === 'Enter'){
       this.props.onNewPost(this.state);
+    }
+  }
+
+  onKeyPressName(event) {
+    if (event.key === 'Enter'){
+      this.props.onNewUsername(this.state);
     }
   }
   
@@ -49,13 +56,14 @@ class Chatbar extends Component {
           className="chatbar-username" 
           value={ this.state.username } 
           onChange={ this.onUsername } 
-          placeholder='Anonymous' />
+          onKeyPress={ this.onKeyPressName } 
+          placeholder='Username' />
         <input
           id="chatbar-message"
           className="chatbar-message" 
           value={ this.state.content } 
           onChange={ this.onContent } 
-          onKeyPress={ this.onKeyPressHandler } 
+          onKeyPress={ this.onKeyPressContent } 
           placeholder="Type a message and hit ENTER" />
         <section>
           <Statusbar count={ this.state.content.length } max={ 140 } />
