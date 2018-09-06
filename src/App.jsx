@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Chatbar from './Chatbar.jsx';
 import MessageList from './MessageList.jsx';
-import data from '../data.json';
+import Navbar from './Navbar.jsx';
 
 function generateAnonymous() {
   let text = 'Anonymous';
@@ -18,7 +18,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentUser: {name: 'Anonymous'},
+      currentUser: {name: ''},
       messages: []
     };
 
@@ -28,15 +28,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-     // Connect to our WebSocket server.
-    // Storing the socket into a property on the App component to be used in
-    // other functions
+    // Connect to our WebSocket server.
+    this.socket = new WebSocket('ws://localhost:3001/');
+    
     let anon = generateAnonymous();
-
     this.setState({currentUser: {name: anon}})
     
-    this.socket = new WebSocket('ws://localhost:3001/');
-
     // Small helper to make sending JSON objects easier.
     this.socket.sendJson = obj => this.socket.send(JSON.stringify(obj));
 
@@ -47,12 +44,13 @@ class App extends Component {
 
     // OnMessage event handler, using a function on the class to handle this so
     // our code stays consise
-   this.socket.onmessage = this._handleSocketMessage;
+    this.socket.onmessage = this._handleSocketMessage;
   }
 
   render() {
     return (
       <div>
+        <Navbar />
         <MessageList messages={ this.state.messages }/>
         <Chatbar 
           currentUser={ this.state.currentUser.name } 

@@ -7,7 +7,7 @@ class Message extends Component {
     if (this.props.type === 'incomingNotification') {
       return (
       <div className='message-system'>
-        { this.props.content }
+        &#9742;    { this.props.content }
       </div>);      
     } else {
       return (
