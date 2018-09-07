@@ -57,7 +57,7 @@ class Chatbar extends Component {
           value={ this.state.username } 
           onChange={ this.onUsername } 
           onKeyPress={ this.onKeyPressName } 
-          placeholder='Username' />
+          placeholder={ this.props.currentUser ? this.props.currentUser : 'Enter username' }/>
         <input
           id="chatbar-message"
           className="chatbar-message" 

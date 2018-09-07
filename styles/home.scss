@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Pacifico");
+
 
 body {
   background: white;
@@ -79,8 +81,21 @@ body {
   color: inherit;
   display: block;
   float: left;
-  font-weight: 700;
+  font-family: 'Pacifico', serif;
+  font-weight: 400;
   font-size: 28px;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+.navbar-count {
+  color: inherit;
+  display: block;
+  float: right;
+  font-weight: 600;
+  font-size: 14px;
   height: 60px;
   line-height: 60px;
   padding: 0 10px;

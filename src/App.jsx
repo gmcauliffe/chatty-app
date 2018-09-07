@@ -19,7 +19,8 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: ''},
-      messages: []
+      messages: [],
+      userCount: ''
     };
 
     this._handleSocketMessage = this._handleSocketMessage.bind(this);
@@ -44,13 +45,33 @@ class App extends Component {
 
     // OnMessage event handler, using a function on the class to handle this so
     // our code stays consise
-    this.socket.onmessage = this._handleSocketMessage;
+    this.socket.onmessage = (event) => {
+      // Message data is serialized as JSON, parse it.
+      const data = JSON.parse(event.data);
+      switch(data.type) {
+        case 'incomingMessage':
+          // handle incoming message
+          this._handleSocketMessage(data);
+          break;
+        case 'incomingNotification':
+          // handle incoming message
+          this._handleSocketMessage(data);
+          break;
+        case 'userCount':
+          // handle incoming notification
+          this._handleUserJoin(data);
+          break;
+        default:
+          // show an error in the console if the message type is unknown
+          throw new Error("Unknown event type " + data.type + data);
+      }     
+    }
   }
 
   render() {
     return (
       <div>
-        <Navbar />
+        <Navbar userCount={ this.state.userCount }/>
         <MessageList messages={ this.state.messages }/>
         <Chatbar 
           currentUser={ this.state.currentUser.name } 
@@ -65,15 +86,18 @@ class App extends Component {
    * @param {MessageEvent} message The MessageEvent object, this contains the data we've received from the server.
    */
   _handleSocketMessage(message) {
-    // Message data is serialized as JSON, parse it.
-    const json = JSON.parse(message.data);
-    console.log('Got message', json);
-
     // Store the received message in our message list.
     this.setState(prevState => ({
       ...prevState,
-      messages: prevState.messages.concat(json)
+      messages: prevState.messages.concat(message)
     }));
+  };
+
+  _handleUserJoin(userCount) {
+    console.log("userCount: ", userCount);
+
+    this.setState({userCount: [userCount.content]})
+
   };
 
   _onNewUsername(newUsername) {
@@ -94,13 +118,10 @@ class App extends Component {
       content: newPost.content,
       username: this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous'
     }
-
     // Send the msg object as a JSON-formatted string.
     this.socket.sendJson(newMessage);
   }
 }
-
-
 
 
 export default App;

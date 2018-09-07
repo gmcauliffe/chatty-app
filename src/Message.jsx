@@ -9,7 +9,7 @@ class Message extends Component {
       <div className='message-system'>
         &#9742;    { this.props.content }
       </div>);      
-    } else {
+    } else if (this.props.type === 'incomingMessage') {
       return (
         <div className='message'>
           <span className='message-username'>{ this.props.username }</span>
