@@ -3,14 +3,7 @@ import Chatbar from './Chatbar.jsx';
 import MessageList from './MessageList.jsx';
 import Navbar from './Navbar.jsx';
 
-function generateAnonymous() {
-  let text = 'Anonymous';
-  var possible = '0123456789';
-  for (var i = 0; i < 2; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
+
 
 class App extends Component {
 
@@ -18,7 +11,9 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentUser: {name: ''},
+      currentUser: {
+        name: '',
+        color: ''},
       messages: [],
       userCount: ''
     };
@@ -31,9 +26,6 @@ class App extends Component {
   componentDidMount() {
     // Connect to our WebSocket server.
     this.socket = new WebSocket('ws://localhost:3001/');
-    
-    let anon = generateAnonymous();
-    this.setState({currentUser: {name: anon}})
     
     // Small helper to make sending JSON objects easier.
     this.socket.sendJson = obj => this.socket.send(JSON.stringify(obj));
@@ -57,7 +49,7 @@ class App extends Component {
           // handle incoming message
           this._handleSocketMessage(data);
           break;
-        case 'userCount':
+        case 'userJoin':
           // handle incoming notification
           this._handleUserJoin(data);
           break;
@@ -72,7 +64,9 @@ class App extends Component {
     return (
       <div>
         <Navbar userCount={ this.state.userCount }/>
-        <MessageList messages={ this.state.messages }/>
+        <MessageList 
+          messages={ this.state.messages }
+          color={ this.state.currentUser.color }/>
         <Chatbar 
           currentUser={ this.state.currentUser.name } 
           onNewPost={ this._onNewPost }
@@ -91,13 +85,23 @@ class App extends Component {
       ...prevState,
       messages: prevState.messages.concat(message)
     }));
+
   };
 
-  _handleUserJoin(userCount) {
-    console.log("userCount: ", userCount);
-
-    this.setState({userCount: [userCount.content]})
-
+  _handleUserJoin(userJoin) {
+    if (!this.state.currentUser.name) {
+      this.setState({
+        userCount: [userJoin.content]
+      })
+    } else {
+      this.setState({
+        currentUser: {
+          name: userJoin.name, 
+          color: userJoin.color
+        },
+        userCount: [userJoin.content]
+      })
+    }
   };
 
   _onNewUsername(newUsername) {
@@ -116,7 +120,8 @@ class App extends Component {
     const newMessage = {
       type: 'postMessage',
       content: newPost.content,
-      username: this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous'
+      username: this.state.currentUser.name,
+      usernameColor: this.state.currentUser.color
     }
     // Send the msg object as a JSON-formatted string.
     this.socket.sendJson(newMessage);

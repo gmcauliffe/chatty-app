@@ -8,8 +8,9 @@ class MessageList extends Component {
         key={ message.id }
         type={ message.type }
         content={ message.content }
-        username={ message.username } />
-    })
+        username={ message.username } 
+        usernameColor={ message.usernameColor } />
+    });
     
     return (
       <main className="messages">

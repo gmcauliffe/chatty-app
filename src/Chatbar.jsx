@@ -65,9 +65,9 @@ class Chatbar extends Component {
           onChange={ this.onContent } 
           onKeyPress={ this.onKeyPressContent } 
           placeholder="Type a message and hit ENTER" />
-        <section>
+        {/* <section>
           <Statusbar count={ this.state.content.length } max={ 140 } />
-        </section>
+        </section> */}
       </footer>
     );
   }
