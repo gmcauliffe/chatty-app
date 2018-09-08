@@ -8,7 +8,7 @@ A messaging application that includes all basic functions of a chatroom: creatin
 
 ### Getting Started
 
-1. Fork this repository, then clone your fork of this repository.
+1. Clone this repository.
 2. Install dependencies using the `npm install` command.
 3. Start the web server using the `npm start` command. The app will be served at <http://localhost:3000/>.
 4. Go to <http://localhost:3000/> in your browser.
@@ -16,10 +16,10 @@ A messaging application that includes all basic functions of a chatroom: creatin
 
 ### Final Product
 
-!["Screenshot of Chatty App"]()
+!["Screenshot of Chatty App"](https://github.com/gmcauliffe/chatty-app/blob/master/docs/Chatty%20App.png?raw=true)
 
 
-### Dependencies
+### Chatty App Dependencies
 
 * babel-core
 * babel-loader
@@ -34,4 +34,9 @@ A messaging application that includes all basic functions of a chatroom: creatin
 * webpack-dev-server
 * react
 * react-dom
+
+### Chatty Server Dependencies
+* express
+* ws
+* uuid
 
