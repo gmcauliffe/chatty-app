@@ -1,0 +1,3 @@
+[submodule "chatty_server"]
+	path = chatty_server
+	url = https://github.com/gmcauliffe/chatty_server
