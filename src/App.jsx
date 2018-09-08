@@ -94,7 +94,6 @@ class App extends Component {
   };
 
   _handleUserJoin(userCount) {
-    console.log("userCount: ", userCount);
 
     this.setState({userCount: [userCount.content]})
 
